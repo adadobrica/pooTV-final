@@ -39,6 +39,7 @@ public final class OnPageWatchAction extends PageAction {
                                    final JsonNode outputNode,
                                    final ObjectMapper objectMapper) {
         int valid = 0;
+
         for (int i = 0; i < currentUser.getPurchasedMovies().size(); i++) {
             if (currentUser.getPurchasedMovies().get(i).getName().equals(movieName)) {
                 Movies watchedMovie = currentUser.getPurchasedMovies().get(i);
@@ -47,6 +48,7 @@ public final class OnPageWatchAction extends PageAction {
                 break;
             }
         }
+
         if (valid == 1) {
             ParseOutput.getInstance().printNormalOutput(output, outputNode, objectMapper,
                     currentUser.getWatchedMovies(), currentUser);
@@ -80,25 +82,15 @@ public final class OnPageWatchAction extends PageAction {
         } else {
             Movies watchedMovie = currentMovieOnPage.get(0);
             String movieName = watchedMovie.getName();
-//            int purchased = 0;
-//            for (int i = 0; i < currentUser.getPurchasedMovies().size(); i++) {
-//                if (currentUser.getPurchasedMovies().get(i).getName().equals(movieName)) {
-//                    purchased = 1;
-//                    break;
-//                }
-//            }
-//            if (purchased == 0) {
-//                ParseOutput.getInstance().printOutputError(output, outputNode, objectMapper);
-//                return currentUser;
-//            }
+
             int alreadyWatched = 0;
             for (int  i = 0; i < currentUser.getWatchedMovies().size(); i++) {
                 if (currentUser.getWatchedMovies().get(i).getName().equals(movieName)) {
-//                    watchedMovie.setRating(currentUser.getWatchedMovies().get(i).getRating() - 1);
                     alreadyWatched = 1;
                     break;
                 }
             }
+
             if (alreadyWatched == 0) {
                 new UserController().addWatchedMovie(currentUser, watchedMovie);
                 ParseOutput.getInstance().printNormalOutput(output, outputNode, objectMapper,
