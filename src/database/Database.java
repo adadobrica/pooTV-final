@@ -128,15 +128,12 @@ public class Database {
                 String recMovie;
                 if (liked == 1) {
                     contextRecommendations.setStrategy(new LikedNotifierStrategy());
-                    currentUser = contextRecommendations.executeStrategy(new Notifications(),
-                            currentUser, output, outputNode, objectMapper,
-                            movies, null);
                 } else {
                     contextRecommendations.setStrategy(new NormalNotifierStrategy());
-                    currentUser = contextRecommendations.executeStrategy(new Notifications(),
-                            currentUser, output, outputNode, objectMapper,
-                            movies, null);
                 }
+                currentUser = contextRecommendations.executeStrategy(new Notifications(),
+                        currentUser, output, outputNode, objectMapper,
+                        movies, null);
             } else {
                 contextRecommendations.setStrategy(new GenreNotifierStrategy());
                 currentUser = contextRecommendations.executeStrategy(new Notifications(),
@@ -161,7 +158,6 @@ public class Database {
         DatabaseFactory databaseFactory = new DatabaseFactory();
         if (feature.equals("delete")) {
             String deletedMovie = action.getDeletedMovie();
-            // check if movie exists
             int exists = 0;
             for (MoviesInput movie : movies) {
                 if (movie.getName().equals(deletedMovie)) {
@@ -170,11 +166,12 @@ public class Database {
                 }
             }
             DatabaseAction deleteAction = databaseFactory.databaseAction("delete");
+            assert deleteAction != null;
             movies = deleteAction.execute(null, deletedMovie, movies);
         }
+
         if (feature.equals("add")) {
             MoviesInput addedMovie = action.getAddedMovie();
-            // check if movie already exists in the database
             String movieName = addedMovie.getName();
             int exists = 0;
             for (MoviesInput movie : movies) {
@@ -183,14 +180,15 @@ public class Database {
                     break;
                 }
             }
+
             if (exists == 1) {
                 ParseOutput.getInstance().printOutputError(output, outputNode, objectMapper);
             } else {
                 DatabaseAction addAction = databaseFactory.databaseAction("add");
+                assert addAction != null;
                 movies = addAction.execute(addedMovie, null, movies);
 
                 if (currentUser.getIsSubscribed() == 1) {
-                    // check if user is subscribed to the new genre added
                     int hasBeenAdded = 0;
                     for (int i = 0; i < currentUser.getSubscribedGenre().size(); i++) {
                         for (int j = 0; j < addedMovie.getGenres().size(); j++) {
@@ -241,9 +239,7 @@ public class Database {
         if (!currentPage.equals("see details")) {
             ParseOutput.getInstance().printOutputError(output, outputNode, objectMapper);
         } else {
-            currentUser.setIsSubscribed(1);
-            //currentUser.setSubscribedGenre(action.getSubscribedGenre());
-            currentUser.getSubscribedGenre().add(action.getSubscribedGenre());
+            new UserController().subscribeAndAddGenre(action.getSubscribedGenre(), currentUser);
         }
     }
 
@@ -262,11 +258,9 @@ public class Database {
 
         if (pageStack.isEmpty()) {
             ParseOutput.getInstance().printOutputError(output, outputNode, objectMapper);
-            if (this.currentPage.equals("see details")) {
-                pageStack.push("see details");
-            }
             return;
         }
+
         if (pageStack.size() == 1) {
             String lastPage = pageStack.pop();
             if (currentUser.getTokensCount() == 0
@@ -279,14 +273,9 @@ public class Database {
                 ParseOutput.getInstance().printOutputError(output, outputNode, objectMapper);
                 return;
             }
-            if (lastPage.equals("see details")) {
-                ParseOutput.getInstance().printNormalOutput(output, outputNode, objectMapper,
-                        currentMoviesForUser, currentUser);
-                this.currentPage = "see details";
-                return;
-            }
             return;
         }
+
         String lastPage = pageStack.pop();
 
         if (!pageStack.isEmpty()) {
@@ -416,20 +405,19 @@ public class Database {
         if (feature.equals("buy tokens") && currentPage.equals("upgrades")) {
             int count = Integer.parseInt(action.getCount());
             OnPageBuyTokensAction tokens = new OnPageBuyTokensAction();
-            currentUser = tokens.buyTokens(Integer.parseInt(action.getCount()), currentUser);
-            System.out.println(currentUser.getTokensCount());
+            tokens.buyTokens(Integer.parseInt(action.getCount()), currentUser);
             updateDatabaseUsers();
         }
 
         if (feature.equals("buy premium account") && currentPage.equals("upgrades")) {
-            currentUser = new OnPagePremiumAction().upgradePremium(currentUser);
+            new OnPagePremiumAction().upgradePremium(currentUser);
             updateDatabaseUsers();
         }
 
         if (feature.equals("purchase") && currentPage.equals("see details")
                 && action.getMovie() != null) {
             String movieName = action.getMovie();
-            currentUser = new OnPagePurchaseAction().purchaseMovieFromList(currentUser,
+            new OnPagePurchaseAction().purchaseMovieFromList(currentUser,
                     currentMoviesForUser, movieName, output, outputNode, objectMapper);
             updateDatabaseUsers();
         } else if (feature.equals("purchase") && currentPage.equals("see details")) {
@@ -437,7 +425,7 @@ public class Database {
                 ParseOutput.getInstance().printOutputError(output, outputNode, objectMapper);
             }
 
-            currentUser = new OnPagePurchaseAction().purchaseMovie(currentUser, currentMovieOnPage,
+            new OnPagePurchaseAction().purchaseMovie(currentUser, currentMovieOnPage,
                     output, outputNode, objectMapper);
             updateDatabaseUsers();
         }
@@ -445,7 +433,7 @@ public class Database {
         if (feature.equals("watch") && currentPage.equals("see details")
                 && action.getMovie() != null) {
             String movieName = action.getMovie();
-            currentUser = new OnPageWatchAction().watchMovieFromList(currentUser, movieName,
+            new OnPageWatchAction().watchMovieFromList(currentUser, movieName,
                     output, outputNode, objectMapper);
             updateDatabaseUsers();
 
@@ -453,7 +441,7 @@ public class Database {
             if (currentMovieOnPage == null) {
                 ParseOutput.getInstance().printOutputError(output, outputNode, objectMapper);
             } else {
-                currentUser = new OnPageWatchAction().watchMovie(currentUser,
+                new OnPageWatchAction().watchMovie(currentUser,
                         currentMoviesForUser, currentMovieOnPage, output, outputNode,
                         objectMapper);
                 updateDatabaseUsers();
@@ -494,7 +482,7 @@ public class Database {
                 int valid = 0;
                 for (int i = 0; i < currentUser.getWatchedMovies().size(); i++) {
                     if (currentUser.getWatchedMovies().get(i).getName().equals(movieName)) {
-                        currentUser = new UserController().addLikedMovie(currentUser, i);
+                        new UserController().addLikedMovie(currentUser, i);
                         valid = 1;
                         updateMovie(movies, currentMovieOnPage.get(0), "like");
                         updateDatabaseUsers();
@@ -509,18 +497,17 @@ public class Database {
 
         if (feature.equals("rate") && currentPage.equals("see details")
                 && action.getMovie() != null) {
-            currentUser = new OnPageRateAction().rateMovieFromList(currentUser, action.getMovie(),
+            new OnPageRateAction().rateMovieFromList(currentUser, action.getMovie(),
                     output, outputNode, objectMapper);
             updateDatabaseUsers();
         } else if (feature.equals("rate") && currentPage.equals("see details")) {
             if (currentMovieOnPage == null) {
-                //ParseOutput.getInstance().printOutputError(output, outputNode, objectMapper);
                 Output printOutput = new Output("Error", new ArrayList<>(), null);
                 outputNode = objectMapper.valueToTree(printOutput);
                 output.add(outputNode);
             } else {
                 double rateNum = Double.parseDouble(action.getRate());
-                currentUser = new OnPageRateAction().rateMovie(currentUser, movies,
+                new OnPageRateAction().rateMovie(currentUser, movies,
                         currentMovieOnPage, output, outputNode, objectMapper, rateNum);
                 updateDatabaseUsers();
             }

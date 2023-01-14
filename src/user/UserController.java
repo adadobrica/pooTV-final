@@ -33,6 +33,19 @@ public final class UserController {
     }
 
     /**
+     * Method that marks the current user as subscribed and adds their subscribed genre
+     * @param genre the subscribed genre for the user
+     * @param currentUser information about the current user
+     * @return the current user
+     */
+
+    public User subscribeAndAddGenre(final String genre, final User currentUser) {
+        currentUser.setIsSubscribed(1);
+        currentUser.getSubscribedGenre().add(genre);
+        return currentUser;
+    }
+
+    /**
      * Adds a new movie to the user's list of watched movies
      * @param currentUser information about the current user
      * @param watchedMovie information about the watched movie

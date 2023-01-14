@@ -21,9 +21,6 @@ public final class Main {
     public static void main(final String[] args) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         InputData inputData = objectMapper.readValue(new File(args[0]), InputData.class);
-//        InputData inputData = objectMapper.readValue(new File("checker/resources/in/basic_4.json")
-//                , InputData.class);
-
 
         ArrayNode output = objectMapper.createArrayNode();
 
