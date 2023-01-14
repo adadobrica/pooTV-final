@@ -6,8 +6,6 @@
  - The entire structure of this project revolves around the main database: that's the entry point of the program and where the entire input gets processed.
  - This database holds certain information: the current page, the previous page, information about the users and the movies available; it also provides an "interface" for the current user to do certain actions, while they navigate between each page: logging in, searching a specific movie, watching it etc.
 
-### Small note: the .git file that contains my commits are placed in the /src directory
-
 ## Implementation:
 
 ### UML Diagrams:
@@ -34,8 +32,11 @@
 
 ### Database package:
 
+![uml_diagram](UML_Diagram_database.png)
+
 - The most important part of the program, the database is where all the information gets processed then printed. 
 - After checking if a certain action is valid, the database prints the output according to each action. The current page and the previous page help to move between the pages more easily, and also help for checking invalid actions.
+- Another important database consists of the movie database, which contains all the possible available movies on the website. There are two possible actions which can change this movie database: either adding a new movie, or deleting one from it. For this, the Factory design pattern was used because it provided a simplified way of differentiating between two different actions that impact the database.
 
 ### Movies package:
 
@@ -54,6 +55,16 @@
 - Each possible user has their own credentials (e.g. username or a password). As the user navigates the website, extra information is needed to be updated all the time: their balance or their list of purchased, rated, or liked movies.
 - For the implementation of the User, UserView and UserController classes, the MVC design pattern was used. This separates the user into three different components. As for this application, we only need a model of the user, and only contains the user's data. UserView presents the desired data by printing certain information, and UserController is the main class where the user data gets processed.
 
+
+### Recommendations package:
+
+![uml_diagram](UML_Diagram_recommendations.png)
+
+- Used the Strategy design pattern for these classes. When a user is subscribed, they will be sent different types of notifications, hence why a context object (`ContextRecommendations`) was needed.
+- `NormalNotifierStrategy` class sends notifications if there is no recommendations available to the current user.
+- `GenreNotifierStrategy` sends notifications based on the user's subscribed genre, and `LikedNotifierStrategy` sends notificatoins based on the user's most liked movies.
+
+
 ### UML Diagram with all classes and packages:
 
 ![uml_diagram](UML_Diagram_all.png)
@@ -69,3 +80,5 @@
 - Created abstract classes to make inheritance easier. All of these classes inherit the same class, PageAction.
 - Implemented a `synchronized` Singleton pattern for the output because only one instance of this class is needed.
 - Implemented the MVC pattern for the user to better differentiate between what represents the model data, what needs to be the output, and what needs to be processed. This also simplifies the user interface and the controlling logic behind it.
+- Used Factory design pattern for the actions that are database-related: either adding a new movie to the current database, or deleting it. I chose Factory for this purpose because it provides an efficient way of creating an object without exposing the logic behind it to the client (in our case, the user).
+- Used Strategy design pattern for the recommendations. When a user is subscribed, they will have certain types of notifications that will be sent to them, depending on the context in which they have subscribed or not. Because of the importance of the "context", this design pattern was used because the structure of the notifications vary.
