@@ -1,0 +1,20 @@
+Starting audit...
+[ERROR] /Users/adriana/Desktop/pooFINAL/oop-asignments/proiect2/./src/database/Database.java:225:40: 'currentPage' hides a field. [HiddenField]
+[ERROR] /Users/adriana/Desktop/pooFINAL/oop-asignments/proiect2/./src/database/Database.java:259:42: 'pageStack' hides a field. [HiddenField]
+[ERROR] /Users/adriana/Desktop/pooFINAL/oop-asignments/proiect2/./src/database/Database.java:261:35: 'currentPage' hides a field. [HiddenField]
+[ERROR] /Users/adriana/Desktop/pooFINAL/oop-asignments/proiect2/./src/database/Database.java:293:20: 'previousPage' hides a field. [HiddenField]
+[ERROR] /Users/adriana/Desktop/pooFINAL/oop-asignments/proiect2/./src/database/Database.java:330:5: Method length is 214 lines (max allowed is 150). [MethodLength]
+[ERROR] /Users/adriana/Desktop/pooFINAL/oop-asignments/proiect2/./src/database/Database.java:331:24: Parameter outputNode should be final. [FinalParameters]
+[ERROR] /Users/adriana/Desktop/pooFINAL/oop-asignments/proiect2/./src/database/Database.java:332:70: Parameter pageStack should be final. [FinalParameters]
+[ERROR] /Users/adriana/Desktop/pooFINAL/oop-asignments/proiect2/./src/database/Database.java:332:84: 'pageStack' hides a field. [HiddenField]
+[ERROR] /Users/adriana/Desktop/pooFINAL/oop-asignments/proiect2/./src/database/Database.java:734:58: 'movies' hides a field. [HiddenField]
+[ERROR] /Users/adriana/Desktop/pooFINAL/oop-asignments/proiect2/./src/output/ParseOutput.java:35:58: Parameter outputNode should be final. [FinalParameters]
+[ERROR] /Users/adriana/Desktop/pooFINAL/oop-asignments/proiect2/./src/output/ParseOutput.java:51:59: Parameter outputNode should be final. [FinalParameters]
+[ERROR] /Users/adriana/Desktop/pooFINAL/oop-asignments/proiect2/./src/user/UserView.java:25:58: Parameter outputNode should be final. [FinalParameters]
+[ERROR] /Users/adriana/Desktop/pooFINAL/oop-asignments/proiect2/./src/Test.java:1: File does not end with a newline. [NewlineAtEndOfFile]
+[ERROR] /Users/adriana/Desktop/pooFINAL/oop-asignments/proiect2/./src/Test.java:9:28: Using the '.*' form of import should be avoided - java.util.concurrent.*. [AvoidStarImport]
+[ERROR] /Users/adriana/Desktop/pooFINAL/oop-asignments/proiect2/./src/Test.java:158: Line is longer than 100 characters (found 108). [LineLength]
+[ERROR] /Users/adriana/Desktop/pooFINAL/oop-asignments/proiect2/./src/Test.java:206:65: Parameter testFileName should be final. [FinalParameters]
+[ERROR] /Users/adriana/Desktop/pooFINAL/oop-asignments/proiect2/./src/Test.java:222: Line is longer than 100 characters (found 108). [LineLength]
+Audit done.
+Checkstyle ends with 17 errors.
